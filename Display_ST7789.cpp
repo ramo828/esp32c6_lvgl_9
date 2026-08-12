@@ -1,15 +1,14 @@
 #include "Display_ST7789.h"
 
 // ==================== SPI Makros ====================
-#define SPI_WRITE(_dat)         SPI.transfer(_dat)      // Bir bayt göndər
-#define SPI_WRITE_Word(_dat)    SPI.transfer16(_dat)   // Bir söz göndər
+#define SPI_WRITE(_dat) SPI.transfer(_dat)         // Bir bayt göndər
+#define SPI_WRITE_Word(_dat) SPI.transfer16(_dat)  // Bir söz göndər
 
 // ==================== SPI İnisializasiyası ====================
 /**
  * @brief SPI modu hazırla
  */
-void spiInit()
-{
+void spiInit() {
   SPI.begin(EXAMPLE_PIN_NUM_SCLK, EXAMPLE_PIN_NUM_MISO, EXAMPLE_PIN_NUM_MOSI);
 }
 
@@ -25,8 +24,7 @@ void spiInit()
  * 5. CS pinini kapat (HIGH)
  * 6. Tranzaksiyasını bitir
  */
-void lcdWriteCommand(uint8_t Cmd)
-{
+void lcdWriteCommand(uint8_t Cmd) {
   SPI.beginTransaction(SPISettings(SPIFreq, MSBFIRST, SPI_MODE0));
   digitalWrite(EXAMPLE_PIN_NUM_LCD_CS, LOW);
   digitalWrite(EXAMPLE_PIN_NUM_LCD_DC, LOW);
@@ -47,8 +45,7 @@ void lcdWriteCommand(uint8_t Cmd)
  * 5. CS pinini kapat (HIGH)
  * 6. Tranzaksiyasını bitir
  */
-void lcdWriteData(uint8_t Data)
-{
+void lcdWriteData(uint8_t Data) {
   SPI.beginTransaction(SPISettings(SPIFreq, MSBFIRST, SPI_MODE0));
   digitalWrite(EXAMPLE_PIN_NUM_LCD_CS, LOW);
   digitalWrite(EXAMPLE_PIN_NUM_LCD_DC, HIGH);
@@ -63,8 +60,7 @@ void lcdWriteData(uint8_t Data)
  * 
  * Rəng məlumatı üçün istifadə olunur (RGB565)
  */
-void lcdWriteDataWord(uint16_t Data)
-{
+void lcdWriteDataWord(uint16_t Data) {
   SPI.beginTransaction(SPISettings(SPIFreq, MSBFIRST, SPI_MODE0));
   digitalWrite(EXAMPLE_PIN_NUM_LCD_CS, LOW);
   digitalWrite(EXAMPLE_PIN_NUM_LCD_DC, HIGH);
@@ -80,8 +76,7 @@ void lcdWriteDataWord(uint16_t Data)
  * Bu funksiya böyük məlumat ötürmə üçün istifadə olunur
  * (məsələn, tam ekran rəng məlumatı)
  */
-void lcdWriteDataNbyte(uint8_t* SetData, uint8_t* ReadData, uint32_t Size)
-{
+void lcdWriteDataNbyte(uint8_t* SetData, uint8_t* ReadData, uint32_t Size) {
   SPI.beginTransaction(SPISettings(SPIFreq, MSBFIRST, SPI_MODE0));
   digitalWrite(EXAMPLE_PIN_NUM_LCD_CS, LOW);
   digitalWrite(EXAMPLE_PIN_NUM_LCD_DC, HIGH);
@@ -101,8 +96,7 @@ void lcdWriteDataNbyte(uint8_t* SetData, uint8_t* ReadData, uint32_t Size)
  * 4. Reset pinini yüksəlt (HIGH) - reset tamamlandı
  * 5. 50ms gözlə (stabilizasiya)
  */
-void lcdReset(void)
-{
+void lcdReset(void) {
   digitalWrite(EXAMPLE_PIN_NUM_LCD_CS, LOW);
   delay(50);
   digitalWrite(EXAMPLE_PIN_NUM_LCD_RST, LOW);
@@ -123,8 +117,7 @@ void lcdReset(void)
  * 5. ST7789 kontroller dəyərləri göndərir
  * 6. Ekranı göstərilmə rejiminə keçirir
  */
-void lcdInit(void)
-{
+void lcdInit(void) {
   // GPIO pinlərini çıxış rejiminə təyin et
   pinMode(EXAMPLE_PIN_NUM_LCD_CS, OUTPUT);
   pinMode(EXAMPLE_PIN_NUM_LCD_DC, OUTPUT);
@@ -140,16 +133,11 @@ void lcdInit(void)
   lcdReset();
 
   // ==================== ST7789 Kontroller İnisializasiya ====================
-  // Bu dəyərlər ST7789 datasheet-indən alınmışdır
-
   lcdWriteCommand(0x11);  // Exit Sleep Mode
   delay(120);
 
-  lcdWriteCommand(0x36);  // Memory Data Access Control (Yönləndirmə)
-  if (HORIZONTAL)
-    lcdWriteData(0x00);   // Üfüqi
-  else
-    lcdWriteData(0x70);   // Şaquli
+  lcdWriteCommand(0x36);     // Memory Data Access Control (MADCTL)
+  lcdWriteData(MADCTL_VAL);  // Display_ST7789.h içindən gəlir
 
   lcdWriteCommand(0x3A);  // Interface Pixel Format
   lcdWriteData(0x05);     // 16-bit/piksel (RGB565)
@@ -226,7 +214,7 @@ void lcdInit(void)
   lcdWriteData(0x32);
 
   lcdWriteCommand(0x21);  // Display Inversion On
-  lcdWriteCommand(0x11);  // Exit Sleep Mode (yenidən)
+  lcdWriteCommand(0x11);  // Exit Sleep Mode
   delay(120);
 
   lcdWriteCommand(0x29);  // Display ON
@@ -243,40 +231,27 @@ void lcdInit(void)
  * @param Xend: Son X koordinatı
  * @param Yend: Son Y koordinatı
  */
-void lcdSetCursor(uint16_t Xstart, uint16_t Ystart, uint16_t Xend, uint16_t Yend)
-{
-  if (HORIZONTAL) {
-    // X koordinatlarını təyin et (üfüqi)
-    lcdWriteCommand(0x2A);
-    lcdWriteData(Xstart >> 8);
-    lcdWriteData(Xstart + Offset_X);
-    lcdWriteData(Xend >> 8);
-    lcdWriteData(Xend + Offset_X);
+void lcdSetCursor(uint16_t Xstart, uint16_t Ystart, uint16_t Xend, uint16_t Yend) {
+  uint16_t x1 = Xstart + Offset_X;
+  uint16_t x2 = Xend + Offset_X;
+  uint16_t y1 = Ystart + Offset_Y;
+  uint16_t y2 = Yend + Offset_Y;
 
-    // Y koordinatlarını təyin et
-    lcdWriteCommand(0x2B);
-    lcdWriteData(Ystart >> 8);
-    lcdWriteData(Ystart + Offset_Y);
-    lcdWriteData(Yend >> 8);
-    lcdWriteData(Yend + Offset_Y);
-  } else {
-    // X koordinatlarını təyin et (şaquli)
-    lcdWriteCommand(0x2A);
-    lcdWriteData(Ystart >> 8);
-    lcdWriteData(Ystart + Offset_Y);
-    lcdWriteData(Yend >> 8);
-    lcdWriteData(Yend + Offset_Y);
+  // Column address (X)
+  lcdWriteCommand(0x2A);
+  lcdWriteData(x1 >> 8);
+  lcdWriteData(x1 & 0xFF);
+  lcdWriteData(x2 >> 8);
+  lcdWriteData(x2 & 0xFF);
 
-    // Y koordinatlarını təyin et
-    lcdWriteCommand(0x2B);
-    lcdWriteData(Xstart >> 8);
-    lcdWriteData(Xstart + Offset_X);
-    lcdWriteData(Xend >> 8);
-    lcdWriteData(Xend + Offset_X);
-  }
+  // Row address (Y)
+  lcdWriteCommand(0x2B);
+  lcdWriteData(y1 >> 8);
+  lcdWriteData(y1 & 0xFF);
+  lcdWriteData(y2 >> 8);
+  lcdWriteData(y2 & 0xFF);
 
-  // Məlumat yazma əmri verə
-  lcdWriteCommand(0x2C);
+  lcdWriteCommand(0x2C);  // memory write
 }
 
 // ==================== LCD Sahə Yenilənməsi ====================
@@ -292,8 +267,7 @@ void lcdSetCursor(uint16_t Xstart, uint16_t Ystart, uint16_t Xend, uint16_t Yend
  * @param Yend: Son Y koordinatı
  * @param color: RGB565 rəng məlumatı
  */
-void lcdAddWindow(uint16_t Xstart, uint16_t Ystart, uint16_t Xend, uint16_t Yend, uint16_t* color)
-{
+void lcdAddWindow(uint16_t Xstart, uint16_t Ystart, uint16_t Xend, uint16_t Yend, uint16_t* color) {
   // Sahə ölçülərini hesabla
   uint16_t Show_Width = Xend - Xstart + 1;
   uint16_t Show_Height = Yend - Ystart + 1;
@@ -315,8 +289,7 @@ void lcdAddWindow(uint16_t Xstart, uint16_t Ystart, uint16_t Xend, uint16_t Yend
  * 
  * PWM istifadə edərək parlaqlıq səviyyəsi tənzimlənir
  */
-void Backlight_Init(void)
-{
+void Backlight_Init(void) {
   // PWM üçün LED kanallı konfiqurə et
   ledcAttach(EXAMPLE_PIN_NUM_BK_LIGHT, Frequency, Resolution);
 
@@ -332,8 +305,7 @@ void Backlight_Init(void)
  *              0   = Söndür
  *              100 = Maksimum parlaqlıq
  */
-void Set_Backlight(uint8_t Light)
-{
+void Set_Backlight(uint8_t Light) {
   // Girdi doğrulama
   if (Light > 100 || Light < 0) {
     Serial.println("Arxa işıq parametri 0-100 aralığında olmalıdır");

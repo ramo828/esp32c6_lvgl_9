@@ -16,8 +16,8 @@
 #define LV_COLOR_DEPTH         16      // 16-bit RGB565
 
 // ==================== Display Eni/Hündürlüyü ====================
-#define LV_HOR_RES_MAX         172     // Ekranın eni
-#define LV_VER_RES_MAX         320     // Ekranın hündürlüyü
+#define LV_HOR_RES_MAX   320
+#define LV_VER_RES_MAX   172
 
 // ==================== LVGL Buffer ====================
 #define LV_BUFFER_ALLOC_STATIC 1       // Statik buffer ayırması
@@ -49,11 +49,11 @@
 
 // Digər widget-ləri devre dışı bırak (memory qənaəti)
 #define LV_USE_TEXTBOX         0
-#define LV_USE_ROLLER          0
-#define LV_USE_KEYBOARD        0
+#define LV_USE_ROLLER          1
+#define LV_USE_KEYBOARD        1
 #define LV_USE_CHECKBOX        0
 #define LV_USE_SWITCH          0
-#define LV_USE_DROPDOWN        0
+#define LV_USE_DROPDOWN        1
 #define LV_USE_CALENDAR        0
 #define LV_USE_MSGBOX          0
 #define LV_USE_COLORPICKER     0
