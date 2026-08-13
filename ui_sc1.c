@@ -5,7 +5,7 @@
 
 #include "ui.h"
 
-lv_obj_t * ui_Screen1 = NULL;
+lv_obj_t * ui_sc1 = NULL;
 lv_obj_t * ui_hour = NULL;
 lv_obj_t * ui_label = NULL;
 lv_obj_t * ui_splitter = NULL;
@@ -15,14 +15,14 @@ lv_obj_t * ui_sign = NULL;
 
 // build funtions
 
-void ui_Screen1_screen_init(void)
+void ui_sc1_screen_init(void)
 {
-    ui_Screen1 = lv_obj_create(NULL);
-    lv_obj_remove_flag(ui_Screen1, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
-    lv_obj_set_style_bg_color(ui_Screen1, lv_color_hex(0x174F24), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_Screen1, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    ui_sc1 = lv_obj_create(NULL);
+    lv_obj_remove_flag(ui_sc1, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    lv_obj_set_style_bg_color(ui_sc1, lv_color_hex(0x174F24), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_sc1, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    ui_hour = lv_label_create(ui_Screen1);
+    ui_hour = lv_label_create(ui_sc1);
     lv_obj_set_width(ui_hour, 95);
     lv_obj_set_height(ui_hour, 90);
     lv_obj_set_x(ui_hour, -70);
@@ -33,7 +33,7 @@ void ui_Screen1_screen_init(void)
     lv_obj_set_style_text_opa(ui_hour, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_font(ui_hour, &ui_font_Font1, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    ui_label = lv_label_create(ui_Screen1);
+    ui_label = lv_label_create(ui_sc1);
     lv_obj_set_width(ui_label, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_label, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_x(ui_label, -5);
@@ -41,7 +41,7 @@ void ui_Screen1_screen_init(void)
     lv_obj_set_align(ui_label, LV_ALIGN_CENTER);
     lv_label_set_text(ui_label, "Latest Edtion");
 
-    ui_splitter = lv_label_create(ui_Screen1);
+    ui_splitter = lv_label_create(ui_sc1);
     lv_obj_set_width(ui_splitter, 16);
     lv_obj_set_height(ui_splitter, 90);
     lv_obj_set_x(ui_splitter, 6);
@@ -52,7 +52,7 @@ void ui_Screen1_screen_init(void)
     lv_obj_set_style_text_opa(ui_splitter, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_font(ui_splitter, &ui_font_Font1, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    ui_minute = lv_label_create(ui_Screen1);
+    ui_minute = lv_label_create(ui_sc1);
     lv_obj_set_width(ui_minute, 95);
     lv_obj_set_height(ui_minute, 90);
     lv_obj_set_x(ui_minute, 88);
@@ -63,7 +63,7 @@ void ui_Screen1_screen_init(void)
     lv_obj_set_style_text_opa(ui_minute, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_font(ui_minute, &ui_font_Font1, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    ui_sign = lv_label_create(ui_Screen1);
+    ui_sign = lv_label_create(ui_sc1);
     lv_obj_set_width(ui_sign, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_sign, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_x(ui_sign, 72);
@@ -75,12 +75,12 @@ void ui_Screen1_screen_init(void)
 
 }
 
-void ui_Screen1_screen_destroy(void)
+void ui_sc1_screen_destroy(void)
 {
-    if(ui_Screen1) lv_obj_del(ui_Screen1);
+    if(ui_sc1) lv_obj_del(ui_sc1);
 
     // NULL screen variables
-    ui_Screen1 = NULL;
+    ui_sc1 = NULL;
     ui_hour = NULL;
     ui_label = NULL;
     ui_splitter = NULL;

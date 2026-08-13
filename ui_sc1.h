@@ -3,17 +3,17 @@
 // LVGL version: 9.3
 // Project name: SquareLine_Project
 
-#ifndef UI_SCREEN1_H
-#define UI_SCREEN1_H
+#ifndef UI_SC1_H
+#define UI_SC1_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-// SCREEN: ui_Screen1
-extern void ui_Screen1_screen_init(void);
-extern void ui_Screen1_screen_destroy(void);
-extern lv_obj_t * ui_Screen1;
+// SCREEN: ui_sc1
+extern void ui_sc1_screen_init(void);
+extern void ui_sc1_screen_destroy(void);
+extern lv_obj_t * ui_sc1;
 extern lv_obj_t * ui_hour;
 extern lv_obj_t * ui_label;
 extern lv_obj_t * ui_splitter;
